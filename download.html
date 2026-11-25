@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Download Wrenscan for Windows</title>
+<meta name="description" content="Download the Wrenscan installer for Windows 10 and 11. Free for up to 15 devices.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top"><a class="brand" href="https://wrenscan.com/"><span>Wren</span>scan</a>
+<nav><a href="https://wrenscan.com/#pricing">Pricing</a><a href="download.html">Download</a><a href="mailto:bcdixon23@gmail.com">Support</a></nav></header>
+<main class="doc">
+<h1>Download Wrenscan</h1>
+<p><b>Windows 10 or 11, 64-bit.</b> <span id="rel">Checking for the latest version…</span></p>
+
+<div id="get" hidden>
+  <p><a class="button" id="link" href="#">Download</a></p>
+  <p class="small">By installing Wrenscan you agree to the <a href="eula.html">licence agreement</a>.</p>
+</div>
+<div id="soon" class="notice" hidden>
+  <b>Wrenscan isn't released yet.</b> The first version is on its way.
+  <a href="mailto:bcdixon23@gmail.com?subject=Tell%20me%20when%20Wrenscan%20is%20out">Email us</a> and we'll tell you when it's out.
+</div>
+
+<h2>Install</h2>
+<ol>
+  <li>Run the installer. It needs no admin rights and installs just for you (IT departments can install for all users).</li>
+  <li>Open <b>Wrenscan</b> from the Start menu.</li>
+  <li>Start a scan. The first one downloads public security data and takes a few minutes.</li>
+</ol>
+<p>The installer and the app are digitally signed by the publisher. While a new version is still building its
+  reputation with Microsoft, Windows may show "Windows protected your PC": click <b>More info</b>, check that the publisher
+  is <b>Bryce Dixon</b> (Wrenscan's founder, whose verified identity signs every release), then click <b>Run anyway</b>. Please never turn off Smart App Control to install
+  Wrenscan; it can't be turned back on without resetting Windows.</p>
+
+<h2>Check the file is genuine (optional)</h2>
+<p>In PowerShell, in your Downloads folder, run <code>Get-FileHash .\<span id="fname">Wrenscan-Setup.exe</span></code>.
+  The result should be exactly:</p>
+<p><code class="hash" id="hash">(shown here once a version is released)</code></p>
+
+<h2>Updates</h2>
+<p>Wrenscan checks for updates itself and asks before installing. Every update is signed and verified before it runs.</p>
+
+<h2>Uninstall</h2>
+<p>Settings › Apps › Installed apps › Wrenscan › Uninstall. Your scan history stays in
+  <code>%USERPROFILE%\.wrenscan</code> until you delete that folder.</p>
+
+<h2>Mac and Linux</h2>
+<p>Not yet. <a href="mailto:bcdixon23@gmail.com?subject=Wrenscan%20for%20Mac%20or%20Linux">Email us</a> if you'd like to know when.</p>
+<script>
+// The release pipeline publishes a signed stable/stable.json next to the installer; show what it offers.
+fetch('stable/stable.json', {cache: 'no-store'}).then(r => r.ok ? r.json() : null).then(m => {
+  const w = m && m.platforms && m.platforms.windows;
+  if (!w || !w.url) throw 0;
+  const name = w.url.split('/').pop(), mb = (w.size / 1048576).toFixed(1);
+  document.getElementById('rel').textContent = `Version ${m.version}, released ${new Date(m.released).toLocaleDateString()}.`;
+  const a = document.getElementById('link');
+  a.href = 'stable/' + w.url; a.textContent = `Download ${name} (${mb} MB)`;
+  document.getElementById('fname').textContent = name;
+  document.getElementById('hash').textContent = w.sha256.toUpperCase();
+  document.getElementById('get').hidden = false;
+}).catch(() => {
+  document.getElementById('rel').textContent = '';
+  document.getElementById('soon').hidden = false;
+});
+</script>
+</main>
+<footer>&copy; 2026 Wrenscan LLC &middot; <a href="eula.html">Licence agreement</a><a href="privacy.html">Privacy</a><a href="refund-policy.html">Refunds</a><a href="mailto:bcdixon23@gmail.com">bcdixon23@gmail.com</a></footer>
+</body>
+</html>
