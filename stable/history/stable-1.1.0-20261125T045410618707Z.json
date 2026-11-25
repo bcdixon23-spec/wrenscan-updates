@@ -1,0 +1,23 @@
+{
+  "channel": "stable",
+  "critical": false,
+  "flavor": "stable",
+  "notes": [
+    "Trend chart: see whether your open problems are going down, scan after scan.",
+    "PDF reports: a one-page summary for managers, then every problem with how to fix it.",
+    "Scan by device name: check only devices whose names start with, say, MCICU - or the whole network.",
+    "First-run setup: a short guide to your first scan and nightly checks."
+  ],
+  "platforms": {
+    "windows": {
+      "sha256": "025976c83c10f3669da58b3a93ecf1e6eedb5bbfbde3f6a40ee50698c33f3579",
+      "size": 13647024,
+      "url": "files/Wrenscan-Setup-1.1.0.exe"
+    }
+  },
+  "product": "wrenscan",
+  "released": "2026-11-25T04:54:10+00:00",
+  "rollout": 10.0,
+  "version": "1.1.0",
+  "yanked": []
+}
