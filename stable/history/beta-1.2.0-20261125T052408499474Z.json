@@ -1,0 +1,22 @@
+{
+  "channel": "beta",
+  "critical": false,
+  "flavor": "stable",
+  "notes": [
+    "Team dashboard over HTTPS: when colleagues open the dashboard from their own computers, sign-ins and passwords are now encrypted.",
+    "Typing http:// takes you to the secure https:// address automatically.",
+    "Companies can use their own certificate instead of Wrenscan's (see the admin notes)."
+  ],
+  "platforms": {
+    "windows": {
+      "sha256": "e854337b43017c86313b19a36f690e73c812d4f34c862a0b354d3e055b8ad4f8",
+      "size": 13665712,
+      "url": "files/Wrenscan-Setup-1.2.0.exe"
+    }
+  },
+  "product": "wrenscan",
+  "released": "2026-11-25T05:24:08+00:00",
+  "rollout": 100.0,
+  "version": "1.2.0",
+  "yanked": []
+}
