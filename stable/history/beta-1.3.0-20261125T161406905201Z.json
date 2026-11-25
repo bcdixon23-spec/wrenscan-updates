@@ -1,0 +1,24 @@
+{
+  "channel": "beta",
+  "critical": false,
+  "flavor": "stable",
+  "notes": [
+    "Microsoft 365 check: an admin signs in once (read-only) and Wrenscan reports missing multi-factor sign-in, too many admins, risky app approvals and more.",
+    "Check other Windows PCs: run the Windows security checks on office PCs with PowerShell Remoting, using your own Windows sign-in.",
+    "Network watch: a quick look for new devices every 15 minutes, with an alert when one appears.",
+    "Export your device list as a spreadsheet (CSV).",
+    "Free edition: 15 devices per scan and 15 scans a month; Home Plus is unlimited."
+  ],
+  "platforms": {
+    "windows": {
+      "sha256": "23425cf2e74441bc57c0b54e190efc25754d53ee37b2b2921d6bee3973c84ecf",
+      "size": 13706712,
+      "url": "files/Wrenscan-Setup-1.3.0.exe"
+    }
+  },
+  "product": "wrenscan",
+  "released": "2026-11-25T16:14:06+00:00",
+  "rollout": 100.0,
+  "version": "1.3.0",
+  "yanked": []
+}
