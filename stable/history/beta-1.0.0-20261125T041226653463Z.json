@@ -1,0 +1,25 @@
+{
+  "channel": "beta",
+  "critical": false,
+  "flavor": "stable",
+  "notes": [
+    "First public release of Wrenscan.",
+    "Finds every device on your network and checks each one for security problems, most urgent first.",
+    "Plain-English explanations and fix steps for every finding; one-click fixes on your PC, most with undo.",
+    "Scheduled scans with alerts by email, Slack, Discord or webhook.",
+    "Free for up to 15 devices per scan; paid plans are coming soon.",
+    "Installer and updates are digitally signed; updates install only after you agree."
+  ],
+  "platforms": {
+    "windows": {
+      "sha256": "be33055d2bf54887ad20388fc1b600e826e8db6fc74eb4aa040ed65fce35ac93",
+      "size": 13621552,
+      "url": "files/Wrenscan-Setup-1.0.0.exe"
+    }
+  },
+  "product": "wrenscan",
+  "released": "2026-11-25T04:12:26+00:00",
+  "rollout": 100.0,
+  "version": "1.0.0",
+  "yanked": []
+}
