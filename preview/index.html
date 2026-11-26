@@ -715,7 +715,7 @@ footer li a:hover{color:#fff}
   // count-up stats
   function countUp(el){ var to=+el.getAttribute('data-count'), t0=null; if(calm){ el.textContent=to; return; }
     function step(t){ if(!t0) t0=t; var p=Math.min((t-t0)/900,1); el.textContent=Math.round(to*(1-Math.pow(1-p,3))); if(p<1) requestAnimationFrame(step); }
-    el.textContent='0'; requestAnimationFrame(step); }
+    el.textContent='0'; requestAnimationFrame(step); setTimeout(function(){ el.textContent=to; }, 1200); }
 
   // reveal on scroll
   var rv=all('.rv');
@@ -732,7 +732,7 @@ footer li a:hover{color:#fff}
     var L= score>=90?'A': score>=80?'B': score>=70?'C':'D', capped=false;
     if(now && (L==='A'||L==='B')){ L='C'; capped=true; }
     var from=shown; shown=score;
-    if(calm) gscore.textContent=score; else { var t0=null; (function tick(t){ if(!t0) t0=t; var p=Math.min((t-t0)/450,1); gscore.textContent=Math.round(from+(score-from)*p); if(p<1) requestAnimationFrame(tick); })(performance.now()); }
+    if(calm) gscore.textContent=score; else { var t0=null; (function tick(t){ if(!t0) t0=t; var p=Math.min((t-t0)/450,1); gscore.textContent=Math.round(from+(score-from)*p); if(p<1 && shown===score) requestAnimationFrame(tick); })(performance.now()); setTimeout(function(){ if(shown===score) gscore.textContent=score; }, 520); }
     if(gbox.textContent!==L){ gbox.classList.add('pop'); setTimeout(function(){ gbox.classList.remove('pop'); }, 300); }
     gbox.textContent=L; gbox.className='gbox g-'+L+(gbox.classList.contains('pop')?' pop':'');
     gmeter.style.width=score+'%';
