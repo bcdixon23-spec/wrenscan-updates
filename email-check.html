@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Free SPF and DMARC checker: can someone spoof your email? - Wrenscan</title>
+<meta name="description" content="Free SPF and DMARC check: see in seconds whether criminals can send email that looks like it comes from your domain, and how to fix it. No sign-up; runs in your browser.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top"><a class="brand" href="https://wrenscan.com/"><span>Wren</span>scan</a>
+<nav><a href="https://wrenscan.com/#pricing">Pricing</a><a href="download.html">Download</a><a href="mailto:support@wrenscan.com">Support</a></nav></header>
+<main class="doc">
+<h1>Can someone send email pretending to be you?</h1>
+<p>Type your business's email domain. This checks the two DNS records that tell Gmail, Outlook and every other
+provider to refuse fake email from it (SPF and DMARC) - the same check the Wrenscan app runs.</p>
+
+<form id="chk" class="checker" autocomplete="off">
+  <label for="dom">Your email domain</label>
+  <div class="row">
+    <input id="dom" name="dom" type="text" inputmode="url" placeholder="yourbusiness.com" spellcheck="false" required>
+    <button class="button" type="submit" id="go">Check my domain</button>
+  </div>
+  <p class="small">Your browser asks Cloudflare's public DNS directly; nothing is sent to Wrenscan. Only public records are read.</p>
+</form>
+
+<div id="out" aria-live="polite"></div>
+
+<div id="cta" class="notice" hidden>
+  <b>That's one check out of 99.</b> The free Wrenscan app also finds every device on your network, open doors on
+  your router, weak Wi-Fi, risky Windows settings and Microsoft 365 gaps - each explained in plain English, many
+  fixed in one click. <a href="download.html">Download Wrenscan for Windows</a> (free for up to 15 devices).
+</div>
+
+<style>
+.checker .row { display: flex; gap: 8px; flex-wrap: wrap; }
+.checker input { flex: 1 1 240px; padding: 10px 12px; font-size: 16px; border-radius: 8px; border: 1px solid #c9ced6; }
+.verdict { margin: 18px 0 8px; padding: 14px 16px; border-radius: 10px; color: #fff; font-weight: 650; }
+.verdict.ok { background: #1f8a4c; } .verdict.part { background: #b98000; } .verdict.bad { background: #c0262d; }
+.item { border: 1px solid rgba(127,127,127,.35); border-radius: 10px; padding: 12px 14px; margin: 10px 0; }
+.item b.sev { text-transform: uppercase; font-size: 12px; letter-spacing: .04em; margin-right: 6px; }
+.item .rec { font-family: ui-monospace, Consolas, monospace; background: rgba(127,127,127,.18); color: inherit; padding: 6px 8px; border-radius: 6px;
+  display: block; margin-top: 6px; overflow-wrap: anywhere; }
+.sev.high { color: #c0262d; } .sev.medium { color: #b98000; } .sev.low { color: #2f74c0; } .sev.good { color: #1f8a4c; }
+</style>
+
+<script>
+// The same rules as Wrenscan's DNS-NO-SPF, DNS-SPF-WEAK, DNS-NO-DMARC and DNS-DMARC-NONE checks
+// (wrenscan/checks/internet.py), run in the browser over DNS-over-HTTPS.
+(function () {
+  const $ = id => document.getElementById(id);
+  const esc = s => String(s).replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
+  const RESOLVERS = ['https://cloudflare-dns.com/dns-query', 'https://dns.google/resolve'];
+
+  async function dns(name, type) {
+    let last;
+    for (const base of RESOLVERS) {
+      try {
+        const r = await fetch(`${base}?name=${encodeURIComponent(name)}&type=${type}`, {headers: {accept: 'application/dns-json'}});
+        if (!r.ok) throw new Error('DNS service answered ' + r.status);
+        return await r.json();
+      } catch (e) { last = e; }
+    }
+    throw last || new Error('no DNS service answered');
+  }
+  // TXT data comes back quoted, sometimes split into several "..." parts
+  const txt = a => (a.data || '').replace(/^"|"$/g, '').replace(/"\s+"/g, '');
+
+  function cleanDomain(v) {
+    v = v.trim().toLowerCase().replace(/^https?:\/\//, '').replace(/^[^@]*@/, '').split(/[\/?#:]/)[0].replace(/\.$/, '');
+    return /^(?=.{1,253}$)([a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,63}$/.test(v) ? v : '';
+  }
+  function suggestedSpf(mx) {
+    const j = mx.join(' '), inc = [];
+    if (j.includes('google')) inc.push('include:_spf.google.com');
+    if (j.includes('outlook.com') || j.includes('protection.outlook')) inc.push('include:spf.protection.outlook.com');
+    if (j.includes('zoho')) inc.push('include:zoho.com');
+    if (!mx.length) return 'v=spf1 -all';
+    return inc.length ? ['v=spf1', ...inc, '~all'].join(' ') : 'v=spf1 mx ~all';
+  }
+  function dmarcTags(rec) {
+    const t = {};
+    rec.split(';').forEach(p => { const i = p.indexOf('='); if (i > 0) t[p.slice(0, i).trim().toLowerCase()] = p.slice(i + 1).trim().toLowerCase(); });
+    return t;
+  }
+
+  function assess(d, domain) {
+    const out = [];
+    if (!d.spf.length) {
+      out.push({sev: 'medium', title: 'Anyone can send email pretending to be this domain (no SPF record)',
+        why: 'SPF tells other mail servers which servers may send email for your domain. Without it, criminals can send convincing fake invoices and payment requests that appear to come from you.',
+        fix: `Add this TXT record for ${domain} at your DNS provider:`, rec: suggestedSpf(d.mx)});
+    } else if (d.spf.length > 1) {
+      out.push({sev: 'medium', title: "The domain's SPF record is broken (more than one)",
+        why: `${d.spf.length} SPF records were found; receiving servers treat that as an error, so it protects nothing.`,
+        fix: 'Merge them into a single record starting v=spf1.', rec: d.spf.join('  |  ')});
+    } else {
+      const rec = d.spf[0].toLowerCase().split(/\s+/), last = rec[rec.length - 1] || '';
+      if (rec.includes('+all') || (last.endsWith('all') && !/^[-~?]/.test(last) && last === 'all')) {
+        out.push({sev: 'high', title: "The domain's SPF record allows every server",
+          why: 'It ends in +all, which tells receivers to accept mail for your domain from anywhere - the opposite of protection.',
+          fix: "Change '+all' at the end to '~all' (or '-all'):", rec: d.spf[0]});
+      } else if (rec.includes('?all') || !rec.some(t => t.endsWith('all') || t.startsWith('redirect='))) {
+        out.push({sev: 'low', title: "The SPF record doesn't say what to do with other servers",
+          why: 'Without ~all or -all at the end, receivers are left to guess about mail from servers you did not list.',
+          fix: 'End the record with ~all (or -all):', rec: d.spf[0]});
+      }
+    }
+    if (!d.dmarc.length) {
+      const rec = d.mx.length ? `v=DMARC1; p=quarantine; rua=mailto:dmarc@${domain}` : 'v=DMARC1; p=reject;';
+      out.push({sev: 'medium', title: "Fake email from this domain isn't blocked (no DMARC record)",
+        why: 'DMARC tells Gmail, Outlook and others to reject or quarantine email that fails the checks for your domain, and sends you reports about who is sending as you. Google and Yahoo now expect it.',
+        fix: d.mx.length ? `Add a TXT record named _dmarc.${domain} with this value, then move to p=reject once the reports look clean:`
+                         : `This domain receives no email, so tell everyone to reject email claiming to be from it - add a TXT record named _dmarc.${domain}:`,
+        rec});
+    } else if (d.dmarc.length === 1) {
+      const t = dmarcTags(d.dmarc[0]);
+      if (!t.p || t.p === 'none') {
+        out.push({sev: 'low', title: "DMARC only monitors and doesn't block fake email",
+          why: "The policy is 'none': it collects reports but still lets forged email through. A good first step, but it doesn't protect anyone yet.",
+          fix: 'Once the reports show your real mail passes, change p=none to p=quarantine, then p=reject.', rec: d.dmarc[0]});
+      } else if (t.pct && /^\d+$/.test(t.pct) && +t.pct < 100) {
+        out.push({sev: 'low', title: 'DMARC only applies to some of the fake email',
+          why: `pct=${t.pct} means only that share of failing email gets the policy.`, fix: 'Raise pct to 100 (or remove it).', rec: d.dmarc[0]});
+      }
+    }
+    return out;
+  }
+
+  function render(domain, d, items) {
+    const serious = items.some(i => i.sev !== 'low');
+    const v = !items.length ? ['ok', `${domain} is protected against email spoofing.`]
+      : serious ? ['bad', `${domain} can be spoofed: ${items.filter(i => i.sev !== 'low').length} problem${items.filter(i => i.sev !== 'low').length === 1 ? '' : 's'} to fix.`]
+      : ['part', `${domain} is partly protected.`];
+    let h = `<div class="verdict ${v[0]}">${esc(v[1])}</div>`;
+    h += items.map(i => `<div class="item"><b class="sev ${i.sev}">${i.sev === 'high' ? 'Fix now' : i.sev === 'medium' ? 'Fix soon' : 'Worth doing'}</b><b>${esc(i.title)}</b>
+      <p>${esc(i.why)}</p><p>${esc(i.fix)}<span class="rec">${esc(i.rec)}</span></p></div>`).join('');
+    if (!items.length) h += `<div class="item"><b class="sev good">Good</b>SPF and DMARC are both set to block forged email.<span class="rec">${esc(d.spf[0])}<br>${esc(d.dmarc[0])}</span></div>`;
+    h += `<p class="small">Mail servers: ${esc(d.mx.join(', ') || 'none')}. Checked ${esc(new Date().toLocaleString())}.</p>`;
+    $('out').innerHTML = h;
+    $('cta').hidden = false;
+  }
+
+  $('chk').addEventListener('submit', async e => {
+    e.preventDefault();
+    const domain = cleanDomain($('dom').value), go = $('go');
+    if (!domain) { $('out').innerHTML = '<p class="notice">Type a domain like <b>yourbusiness.com</b> (the part after the @ in your email address).</p>'; return; }
+    go.disabled = true; go.textContent = 'Checking...'; $('out').innerHTML = '';
+    try {
+      const [t, m, dm] = await Promise.all([dns(domain, 'TXT'), dns(domain, 'MX'), dns('_dmarc.' + domain, 'TXT')]);
+      if (t.Status === 3) { $('out').innerHTML = `<p class="notice"><b>${esc(domain)}</b> doesn't exist in DNS. Check the spelling.</p>`; return; }
+      const d = {
+        spf: (t.Answer || []).filter(a => a.type === 16).map(txt).filter(s => s.toLowerCase().startsWith('v=spf1')),
+        mx: (m.Answer || []).filter(a => a.type === 15).map(a => a.data.split(/\s+/).pop().replace(/\.$/, '').toLowerCase()),
+        dmarc: (dm.Answer || []).filter(a => a.type === 16).map(txt).filter(s => s.toLowerCase().startsWith('v=dmarc1')),
+      };
+      render(domain, d, assess(d, domain));
+    } catch (err) {
+      $('out').innerHTML = `<p class="notice">The DNS check couldn't run (${esc(err.message || err)}). Try again in a moment.</p>`;
+    } finally { go.disabled = false; go.textContent = 'Check my domain'; }
+  });
+})();
+</script>
+</main>
+<footer>&copy; 2026 Wrenscan LLC &middot; <a href="eula.html">Licence agreement</a><a href="privacy.html">Privacy</a><a href="refund-policy.html">Refunds</a><a href="mailto:support@wrenscan.com">support@wrenscan.com</a></footer>
+</body>
+</html>
