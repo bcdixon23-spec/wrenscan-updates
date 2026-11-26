@@ -1,0 +1,44 @@
+{
+  "channel": "stable",
+  "critical": false,
+  "fallback": {
+    "critical": false,
+    "notes": [
+      "Security grade: every scan gets an A-F grade and a score out of 100, with the reason and how it changed since last time - on the dashboard, reports, PDF and weekly summary.",
+      "Never scan this device: tick it on any device (printers, medical or industrial equipment) and Wrenscan lists it but never probes it.",
+      "Emerging-threat alerts (Home Plus and Business): every morning Wrenscan checks the latest list of flaws attackers are using and tells you the same day if one is on your network.",
+      "PDF reports start with an executive summary: the grade, what it means, what was checked and what to fix first. Business plans can add their logo.",
+      "Try Home Plus free for 14 days: one click, no card, no account.",
+      "Tidier dashboard: shorter lists with 'Show all', 'Jump to' links, and the device list only shows devices on your own network."
+    ],
+    "platforms": {
+      "windows": {
+        "sha256": "b9e738d70844eca5e82dbdb10e41b71a8e0d2bb03b5061667fcc1367478ab80b",
+        "size": 13759168,
+        "url": "files/Wrenscan-Setup-1.3.3.exe"
+      }
+    },
+    "released": "2026-11-25T22:10:22+00:00",
+    "version": "1.3.3"
+  },
+  "flavor": "stable",
+  "notes": [
+    "Attack protection: 15 new checks for what actually hits homes and small businesses - ransomware protection for your files, Defender's extra rules, password-theft protections, account lockout and more.",
+    "Spots the traces of a 'paste this command' scam (fake CAPTCHA pages), hidden startup commands, and a hosts file that redirects banks or blocks updates.",
+    "Tells you about a proxy, an unfamiliar DNS server or remote-control software (AnyDesk, TeamViewer and others) so you can confirm they are yours.",
+    "Home Plus and Business: 10 new one-click fixes, each checked afterwards and undoable.",
+    "Reports: an open finding now wraps properly on phones and narrow windows."
+  ],
+  "platforms": {
+    "windows": {
+      "sha256": "600228112a9c344ef6da15d1674d1e75a2c4c35cf19593e1048a85dc6940b7cc",
+      "size": 13792016,
+      "url": "files/Wrenscan-Setup-1.3.4.exe"
+    }
+  },
+  "product": "wrenscan",
+  "released": "2026-11-26T02:48:27+00:00",
+  "rollout": 10.0,
+  "version": "1.3.4",
+  "yanked": []
+}
