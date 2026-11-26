@@ -39,7 +39,7 @@
   },
   "product": "wrenscan",
   "released": "2026-11-26T05:27:18+00:00",
-  "rollout": 10.0,
+  "rollout": 100.0,
   "version": "1.3.6",
   "yanked": []
 }
