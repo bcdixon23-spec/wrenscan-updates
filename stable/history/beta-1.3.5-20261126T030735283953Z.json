@@ -1,0 +1,23 @@
+{
+  "channel": "beta",
+  "critical": false,
+  "flavor": "stable",
+  "notes": [
+    "Share your grade: 'Share' next to any scan makes a picture of your grade to post or send - with no addresses, device names or network name in it.",
+    "Backup check: tells you if no backup of your files was found (OneDrive or another cloud folder, File History, Windows Backup or a backup program), or if File History hasn't run for a month.",
+    "The device list opens faster.",
+    "Scan history: the links on each row wrap instead of making the table scroll sideways."
+  ],
+  "platforms": {
+    "windows": {
+      "sha256": "f454a77ec07913808fff41536bc8cddc66b8b8f6bd7776884a4dc2132ed1dba1",
+      "size": 13801192,
+      "url": "files/Wrenscan-Setup-1.3.5.exe"
+    }
+  },
+  "product": "wrenscan",
+  "released": "2026-11-26T03:07:35+00:00",
+  "rollout": 100.0,
+  "version": "1.3.5",
+  "yanked": []
+}
