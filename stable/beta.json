@@ -3,21 +3,25 @@
   "critical": false,
   "flavor": "stable",
   "notes": [
-    "Share your grade: 'Share' next to any scan makes a picture of your grade to post or send - with no addresses, device names or network name in it.",
-    "Backup check: tells you if no backup of your files was found (OneDrive or another cloud folder, File History, Windows Backup or a backup program), or if File History hasn't run for a month.",
-    "The device list opens faster.",
-    "Scan history: the links on each row wrap instead of making the table scroll sideways."
+    "New check: tells you if your router, camera or storage box is a model the FBI says criminals are hijacking, or one with a flaw CISA says is being used in attacks right now. Paid plans get a same-day alert when their model is added.",
+    "New check: tells you when Chrome, Edge or Firefox on this PC is two or more versions behind - the usual sign it has stopped updating itself.",
+    "Fixed: opening Wrenscan again while its window was minimized showed a blank white window. It now brings the dashboard back.",
+    "The window now fits the screen on smaller laptops instead of hanging off the bottom.",
+    "One-click fixes: a fix that can't be applied now says why in plain words; 'Turn on real-time protection' and the Quad9 DNS fix no longer say they failed when they worked.",
+    "Uninstalling Wrenscan now removes its scheduled scans from Windows too.",
+    "Settings > Theme now changes the dashboard as well as reports.",
+    "Smaller fixes: the 'wrenscan checks' command, licence status now shows a running trial, and a clearer note where the list of software flaws isn't needed."
   ],
   "platforms": {
     "windows": {
-      "sha256": "f454a77ec07913808fff41536bc8cddc66b8b8f6bd7776884a4dc2132ed1dba1",
-      "size": 13801192,
-      "url": "files/Wrenscan-Setup-1.3.5.exe"
+      "sha256": "a4f290ac92d557c5137fa0267edf24a7b32d65dd63f0910d6454a40dab92adf4",
+      "size": 13836544,
+      "url": "files/Wrenscan-Setup-1.3.6.exe"
     }
   },
   "product": "wrenscan",
-  "released": "2026-11-26T03:07:35+00:00",
+  "released": "2026-11-26T05:26:03+00:00",
   "rollout": 100.0,
-  "version": "1.3.5",
+  "version": "1.3.6",
   "yanked": []
 }
