@@ -117,9 +117,9 @@
   });
 
   // copy buttons on code blocks (blog)
-  all('pre').forEach(function(pre){ if(!navigator.clipboard) return; var b=document.createElement('button'); b.type='button'; b.className='copy'; b.textContent='Copy';
-    b.addEventListener('click', function(){ navigator.clipboard.writeText(pre.querySelector('code').textContent).then(function(){ b.textContent='Copied'; setTimeout(function(){ b.textContent='Copy'; }, 1500); }); });
-    pre.appendChild(b); });
+  all('.code').forEach(function(box){ if(!navigator.clipboard) return; var b=document.createElement('button'); b.type='button'; b.className='copy'; b.textContent='Copy';
+    b.addEventListener('click', function(){ navigator.clipboard.writeText(box.querySelector('code').textContent).then(function(){ b.textContent='Copied'; setTimeout(function(){ b.textContent='Copy'; }, 1500); }); });
+    box.querySelector('.codebar').appendChild(b); });
 
   // reading progress (blog)
   var bar=$('progress');

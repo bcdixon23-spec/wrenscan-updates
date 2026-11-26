@@ -10,9 +10,11 @@ img,video{max-width:100%;height:auto;display:block}
 a{color:inherit;text-decoration:none}
 button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 :focus-visible{outline:2px solid var(--cyan);outline-offset:3px;border-radius:6px}
+.skip{position:fixed;left:16px;top:-80px;z-index:200;padding:12px 18px;border-radius:10px;background:#fff;color:#0B1A4A;font:600 15px var(--body);transition:top .15s}
+.skip:focus{top:12px}
 .wrap{width:min(var(--wrap),100% - 48px);margin-inline:auto}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-h1,h2,h3{font-family:var(--head);letter-spacing:-.025em;line-height:1.08;margin:0}
+h1,h2,h3{font-family:var(--head);letter-spacing:-.025em;line-height:1.08;margin:0;text-wrap:balance}
 p{margin:0}
 .grad{background:linear-gradient(92deg,#9CC0FF 0%,#4D8BFF 45%,#3EE0FF 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
 
@@ -337,7 +339,7 @@ footer li a:hover{color:#fff}
   .probs{padding:4px 6px}.probs li{flex-wrap:wrap;gap:8px 10px}.probs .t{flex-basis:100%}
   .sharestrip{padding:22px;margin-top:48px}
   .founder{padding:32px 22px}.founder h2{font-size:28px}
-  .form{flex-direction:column}
+  .form{flex-direction:column}.form input{flex:none;width:100%}
   .panel .crop{aspect-ratio:16/11}
   .fgrid{grid-template-columns:minmax(0,1fr)}
   .sec{padding:72px 0}
@@ -362,6 +364,8 @@ footer li a:hover{color:#fff}
 .maclist>div{display:flex;flex-direction:column;gap:4px;padding:18px 20px;border:1px solid var(--line);border-radius:14px;background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.012))}
 .maclist b{font-weight:600;font-size:16px}
 .maclist span{color:var(--muted);font-size:14.5px;line-height:1.5}
+.maclist>.plus{grid-column:span 2;border-color:rgba(77,139,255,.45);background:radial-gradient(420px 140px at 0% 0%,rgba(77,139,255,.2),transparent 70%),var(--panel)}
+.maclist>.plus b{color:#fff}.maclist>.plus span{color:var(--soft)}
 
 /* ---------- page head (blog index, 404) ---------- */
 .pagehead{position:relative;padding:150px 0 64px;text-align:center;isolation:isolate}
@@ -382,13 +386,23 @@ kbd{font:600 12px var(--body);padding:2px 7px;border:1px solid var(--line2);bord
 .pbody h3{font-size:19px;line-height:1.3;letter-spacing:-.015em}
 .pbody p{color:var(--muted);font-size:15px;line-height:1.55;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 .pmeta{color:var(--muted);font-size:13.5px;margin-top:auto}
+.pcard.feat{grid-column:1/-1;flex-direction:row;align-items:stretch}
+.pcard.feat .pimg{flex:1.2;aspect-ratio:auto;min-height:340px;border-bottom:0;border-right:1px solid var(--line)}
+.pcard.feat .pimg img{width:100%;height:100%;object-fit:cover;object-position:left top}
+.pcard.feat .pbody{flex:1;justify-content:center;gap:14px;padding:44px}
+.pcard.feat h3{font-size:30px;line-height:1.18}
+.pcard.feat p{font-size:16.5px;-webkit-line-clamp:4}
+.pcard.feat .pmeta{margin-top:6px}
+.pcard.feat .more{display:inline-flex;align-items:center;gap:8px;margin-top:8px;color:#8FB6FF;font:600 15px var(--body)}
+.pcard.feat .more svg{width:16px;height:16px;transition:transform .2s}
+.pcard.feat:hover .more svg{transform:translateX(4px)}
 
 /* ---------- article ---------- */
 #progress{position:fixed;top:68px;left:0;height:3px;width:0;z-index:49;background:linear-gradient(90deg,var(--brand),var(--cyan))}
 .narrow{max-width:780px}
 .post{padding:136px 0 96px}
 .crumbs{display:flex;gap:10px;align-items:center;font:600 13px/1 var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
-.crumbs a{color:#8FB6FF}
+.crumbs a{color:#8FB6FF;padding:8px 0}
 .post h1{margin-top:18px;font-size:clamp(32px,4.2vw,48px);font-weight:800;line-height:1.12}
 .post>.wrap>.pmeta{margin-top:16px;padding-bottom:28px;border-bottom:1px solid var(--line)}
 .prose{margin-top:32px;font-size:18px;line-height:1.75;color:var(--soft)}
@@ -400,9 +414,11 @@ kbd{font:600 12px var(--body);padding:2px 7px;border:1px solid var(--line2);bord
 .prose ul,.prose ol{padding-left:26px;display:grid;gap:10px}
 .prose li::marker{color:var(--brand)}
 .prose code{font:500 .88em ui-monospace,SFMono-Regular,Consolas,monospace;padding:2px 6px;border-radius:6px;background:rgba(148,163,184,.16);color:#E6EDFB;overflow-wrap:anywhere}
-.prose pre{position:relative;padding:18px 20px;border:1px solid var(--line2);border-radius:14px;background:#0B0F1A;overflow:auto}
+.code{border:1px solid var(--line2);border-radius:14px;background:#0B0F1A;overflow:hidden}
+.codebar{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:44px;padding:0 8px 0 18px;border-bottom:1px solid var(--line);background:rgba(255,255,255,.03);color:var(--muted);font:600 12.5px/1 var(--body);letter-spacing:.07em;text-transform:uppercase}
+.prose pre{margin:0;padding:18px 20px;overflow:auto}
 .prose pre code{padding:0;background:none;font-size:15px;line-height:1.6;white-space:pre}
-.copy{position:absolute;top:10px;right:10px;height:30px;padding:0 12px;border:1px solid var(--line2);border-radius:8px;background:#131A2C;color:var(--soft);font:600 12.5px var(--body)}
+.copy{height:30px;padding:0 12px;border:1px solid var(--line2);border-radius:8px;background:#131A2C;color:var(--soft);font:600 12.5px var(--body);letter-spacing:0;text-transform:none;cursor:pointer}
 .copy:hover{border-color:var(--brand);color:#fff}
 .tablewrap{overflow-x:auto;border:1px solid var(--line2);border-radius:14px}
 .prose table{width:100%;border-collapse:collapse;font-size:15.5px;line-height:1.5;min-width:560px}
@@ -417,11 +433,18 @@ kbd{font:600 12px var(--body);padding:2px 7px;border:1px solid var(--line2);bord
 @media (max-width:920px){
   .posts{grid-template-columns:repeat(2,1fr)}
   .maclist{grid-template-columns:repeat(2,1fr)}
+  .maclist>.plus{grid-column:auto}
+  .posts>.pcard:last-child:nth-child(odd):not(.feat){grid-column:1/-1}
+  .pcard.feat{flex-direction:column}.pcard.feat .pimg{flex:none;min-height:0;aspect-ratio:16/8.4;border-right:0;border-bottom:1px solid var(--line)}
+  .pcard.feat .pimg img{width:130%;height:auto}.pcard.feat .pbody{padding:28px}.pcard.feat h3{font-size:24px}
   .trust-row{grid-template-columns:repeat(2,max-content)}
   .postcta{flex-direction:column;align-items:flex-start}
 }
 @media (max-width:620px){
   .posts,.maclist{grid-template-columns:minmax(0,1fr)}
+  .posts>.pcard:last-child:nth-child(odd):not(.feat){grid-column:auto}
+  .pcard.feat .pimg img{width:170%}.pcard.feat .pbody{padding:22px}.pcard.feat h3{font-size:21px}.pcard.feat p{font-size:15px}
+  .prose pre{padding:16px}.prose pre code{font-size:14px}
   .macform{padding:26px 20px}
   .trust-row{grid-template-columns:repeat(2,minmax(0,max-content))}
   .post{padding:108px 0 72px}
